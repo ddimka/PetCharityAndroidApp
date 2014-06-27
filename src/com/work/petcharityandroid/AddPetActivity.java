@@ -49,6 +49,8 @@ public class AddPetActivity extends Activity {
 
 	private static final int LOAD_IMAGE_FROM_CAMERA = 1;
 	private static final int LOAD_IMAGE_FROM_GALERY = 2;
+	private static final int ADD_NEW_PET = 3;
+	private static final int UPDATE_PET = 3;
 	EditText editPetName;
 	EditText editComment;
 	Spinner editKalbiya;
@@ -59,7 +61,9 @@ public class AddPetActivity extends Activity {
 	Bitmap captureBmp;
 	Bitmap smallBmp;
 	byte[] bArray;
+	ByteArrayOutputStream bos;
 	Calendar calendar;
+	int process;
 	int mYear;
 	int mMonth;
 	int mDay;
@@ -74,13 +78,66 @@ public class AddPetActivity extends Activity {
 		final int mMonth = calendar.get(Calendar.MONTH);
 		final int mDay = calendar.get(Calendar.DAY_OF_MONTH);
 
+		new KalbiyaListAsyncTask().execute();
+
+		Intent intent = getIntent();
+
+		Long fromIntentId = intent.getLongExtra("intentId", 0);
+		String fromIntentPetName = intent.getStringExtra("intentPetName");
+		String fromIntentComment = intent.getStringExtra("intentComment");
+		String fromIntentKalbiya = intent.getStringExtra("intentKalbiya");
+		String fromIntentNeedMoney = intent.getStringExtra("intentNeedMoney");
+		String fromIntentHaveMoney = intent.getStringExtra("intentHaveMoney");
+		String fromIntentDeathDate = intent.getStringExtra("intentDeathDate");
+		byte[] fromIntentPicture = intent.getByteArrayExtra("intentPicture");
+
+		Log.d("Test", "Id = " + fromIntentId);
+
 		editPetName = (EditText) findViewById(R.id.editPetName);
 		editComment = (EditText) findViewById(R.id.editComment);
 		editKalbiya = (Spinner) findViewById(R.id.editKalbiya);
 		editNeedMoney = (EditText) findViewById(R.id.editNeedMoney);
 		editHaveMoney = (EditText) findViewById(R.id.editHaveMoney);
 		editDeathDate = (TextView) findViewById(R.id.editDeathDate);
-		editDeathDate.setText(mDay + "/" + mMonth + "/" + mYear);
+		pictFrame = (ImageView) findViewById(R.id.imgFrame);
+
+		if (fromIntentPetName == "") {
+			editPetName.setText("");
+			process = ADD_NEW_PET;
+		} else {
+			editPetName.setText(fromIntentPetName);
+			process = UPDATE_PET;
+		}
+		if (fromIntentComment == "")
+			editComment.setText("");
+		else
+			editComment.setText(fromIntentComment);
+
+		if (fromIntentKalbiya == "")
+			editKalbiya.setSelected(false);
+
+		if (fromIntentNeedMoney == "")
+			editNeedMoney.setText("");
+		else
+			editNeedMoney.setText(fromIntentNeedMoney);
+		if (fromIntentHaveMoney == "")
+			editHaveMoney.setText("");
+		else
+			editHaveMoney.setText(fromIntentHaveMoney);
+
+		if (fromIntentPicture == null)
+			bArray = null;
+		else {
+			bArray = fromIntentPicture.clone();
+			smallBmp = BitmapFactory.decodeByteArray(bArray, 0, bArray.length);
+			pictFrame.setImageBitmap(smallBmp);
+		}
+
+		if (fromIntentDeathDate == "")
+			editDeathDate.setText(mDay + "/" + mMonth + "/" + mYear);
+		else
+			editDeathDate.setText(fromIntentDeathDate);
+
 		editDeathDate.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -104,9 +161,6 @@ public class AddPetActivity extends Activity {
 			}
 		});
 
-		new KalbiyaListAsyncTask().execute();
-
-		pictFrame = (ImageView) findViewById(R.id.imgFrame);
 		pictFrame.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -126,7 +180,8 @@ public class AddPetActivity extends Activity {
 								intent.putExtra(
 										MediaStore.EXTRA_OUTPUT,
 										Uri.fromFile(getTempFile(AddPetActivity.this)));
-								startActivityForResult(intent, LOAD_IMAGE_FROM_CAMERA);
+								startActivityForResult(intent,
+										LOAD_IMAGE_FROM_CAMERA);
 								dialog.dismiss();
 							}
 						});
@@ -139,7 +194,8 @@ public class AddPetActivity extends Activity {
 										Intent.ACTION_PICK,
 										android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 
-								startActivityForResult(i, LOAD_IMAGE_FROM_GALERY);
+								startActivityForResult(i,
+										LOAD_IMAGE_FROM_GALERY);
 								dialog.dismiss();
 							}
 						});
@@ -155,30 +211,41 @@ public class AddPetActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				// Check if values are provided
 				String txtPetName = editPetName.getText().toString().trim();
 				String txtComment = editComment.getText().toString().trim();
-				String txtKalbiya = editKalbiya.getSelectedItem().toString()
+				String txtKalbiya = editKalbiya.getSelectedItem()
+						.toString().trim();
+				String txtNeedMoney = editNeedMoney.getText().toString()
 						.trim();
-				String txtNeedMoney = editNeedMoney.getText().toString().trim();
-				String txtHaveMoney = editHaveMoney.getText().toString().trim();
+				String txtHaveMoney = editHaveMoney.getText().toString()
+						.trim();
 				// String txtPicture = "";
 				// //editPictureLink.getText().toString().trim();
-				String txtDeathDate = editDeathDate.getText().toString().trim();
+				String txtDeathDate = editDeathDate.getText().toString()
+						.trim();
 
 				if (smallBmp == null) {
 					smallBmp = BitmapFactory.decodeResource(getResources(),
 							R.drawable.ic_launcher);
 				}
-				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				bos = new ByteArrayOutputStream();
 				smallBmp.compress(Bitmap.CompressFormat.PNG, 100, bos);
-				byte[] bArray = bos.toByteArray();
+				bArray = bos.toByteArray();
 
 				// Go ahead and perform the transaction
 				Object[] params = { txtPetName, txtComment, txtKalbiya,
 						txtNeedMoney, txtHaveMoney, bArray, txtDeathDate };
-				new AddPetAsyncTask(AddPetActivity.this).execute(params);
-
+				
+				if (process == ADD_NEW_PET) {
+					// Check if values are provided
+					
+					new AddPetAsyncTask(AddPetActivity.this).execute(params);
+				}
+				if (process == UPDATE_PET) {
+					
+					new UpdatePetAsyncTask(AddPetActivity.this).execute(params);
+				}
+				
 			}
 		});
 
@@ -218,35 +285,37 @@ public class AddPetActivity extends Activity {
 				break;
 			case LOAD_IMAGE_FROM_GALERY:
 				if (resultCode == RESULT_OK) {
-			         Uri selectedImage = data.getData();
-			         String[] filePathColumn = { MediaStore.Images.Media.DATA };
-			 
-			         Cursor cursor = getContentResolver().query(selectedImage,
-			                 filePathColumn, null, null, null);
-			         cursor.moveToFirst();
-			 
-			         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-			         String picturePath = cursor.getString(columnIndex);
-			         cursor.close();
-			                      
-			         // String picturePath contains the path of selected Image
-			         final File fileFromGalery = new File(picturePath);
-						try {
-							captureBmp = Media.getBitmap(getContentResolver(),
-									Uri.fromFile(fileFromGalery));
-							// Log.d("Test", file.toString());
-							// do whatever you want with the bitmap (Resize, Rename, Add
-							// To Gallery, etc)
-							smallBmp = ShrinkBitmap(picturePath.toString(), 300, 300);
-							pictFrame.setImageBitmap(captureBmp);
+					Uri selectedImage = data.getData();
+					String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
-						} catch (FileNotFoundException e) {
-							e.printStackTrace();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						break;
-			     }
+					Cursor cursor = getContentResolver().query(selectedImage,
+							filePathColumn, null, null, null);
+					cursor.moveToFirst();
+
+					int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+					String picturePath = cursor.getString(columnIndex);
+					cursor.close();
+
+					// String picturePath contains the path of selected Image
+					final File fileFromGalery = new File(picturePath);
+					try {
+						captureBmp = Media.getBitmap(getContentResolver(),
+								Uri.fromFile(fileFromGalery));
+						// Log.d("Test", file.toString());
+						// do whatever you want with the bitmap (Resize, Rename,
+						// Add
+						// To Gallery, etc)
+						smallBmp = ShrinkBitmap(picturePath.toString(), 300,
+								300);
+						pictFrame.setImageBitmap(captureBmp);
+
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					break;
+				}
 			}
 		}
 	}
@@ -333,6 +402,64 @@ public class AddPetActivity extends Activity {
 
 	}
 
+	private class UpdatePetAsyncTask extends AsyncTask<Object, Void, Pet> {
+		Context context;
+		private ProgressDialog pd;
+
+		public UpdatePetAsyncTask(Context context) {
+			this.context = context;
+		}
+
+		protected void onPreExecute() {
+			super.onPreExecute();
+			pd = new ProgressDialog(context);
+			pd.setMessage("Updating the pet...");
+			pd.show();
+		}
+
+		protected Pet doInBackground(Object... params) {
+			Pet response = null;
+			try {
+				Petendpoint.Builder builder = new Petendpoint.Builder(
+						AndroidHttp.newCompatibleTransport(),
+						new GsonFactory(), null);
+				Petendpoint service = builder.build();
+				Pet pet = new Pet();
+				pet.setPetName((String) (params[0]));
+				pet.setDescription((String) (params[1]));
+				pet.setKalbiya((String) (params[2]));
+				pet.setMoneyNeeded((String) (params[3]));
+				pet.setMoneyHave((String) (params[4]));
+				pet.encodePicture((byte[]) params[5]);
+				pet.setDeathDate((String) (params[6]));
+
+				response = service.updatePet(pet).execute();
+			} catch (Exception e) {
+				Log.d("Could not update pet", e.getMessage(), e);
+			}
+			return response;
+		}
+
+		protected void onPostExecute(Pet pet) {
+			// Clear the progress dialog and the fields
+			pd.dismiss();
+			editPetName.setText("");
+			editComment.setText("");
+			// editKalbiya.setSelection();
+			editNeedMoney.setText("");
+			editHaveMoney.setText("");
+			pictFrame.setImageDrawable(getResources().getDrawable(
+					R.drawable.ic_launcher));
+			editDeathDate.setText(calendar.get(Calendar.DAY_OF_MONTH) + "/"
+					+ calendar.get(Calendar.MONTH) + "/"
+					+ calendar.get(Calendar.YEAR));
+			// Display success message to user
+			Toast.makeText(getBaseContext(), "Pet updated succesfully",
+					Toast.LENGTH_SHORT).show();
+		}
+
+	}
+	
 	private class KalbiyaListAsyncTask extends
 			AsyncTask<Void, Void, CollectionResponseKalbiya> {
 		// Context context;

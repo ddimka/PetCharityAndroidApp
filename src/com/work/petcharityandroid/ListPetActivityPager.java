@@ -14,6 +14,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -99,7 +100,7 @@ public class ListPetActivityPager extends Activity {
 		public Object instantiateItem(View collection, final int position) {
 
 			final Pet currentPet = allPetsList.get(position); // - 1
-			byte[] bArray = currentPet.decodePicture(); 
+			final byte[] bArray = currentPet.decodePicture(); 
 			Bitmap bitmap = BitmapFactory.decodeByteArray(bArray, 0, bArray.length);
 			LayoutInflater inflater = (LayoutInflater) collection.getContext()
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -113,18 +114,23 @@ public class ListPetActivityPager extends Activity {
 				public boolean onLongClick(View v) {
 //					Toast.makeText(ListPetActivityPager.this, "ID = " + currentPet.getId(), Toast.LENGTH_LONG).show();
 					AlertDialog.Builder builder = new AlertDialog.Builder(ListPetActivityPager.this);                
-                    builder.setTitle("ID = " + currentPet.getId());
-                    builder.setMessage("Name: " + currentPet.getPetName() + "\n\nAre you sure you want to delete?");
+                    builder.setTitle("Name: " + currentPet.getPetName());
+                    builder.setMessage("Do you want to edit?");
                     builder.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                             
                             public void onClick(DialogInterface dialog, int which) {
-                            	try {
-									service.removePet(currentPet.getId()).execute();
-									allPetsList.remove(position);
-								} catch (IOException e) {
-									Toast.makeText(ListPetActivityPager.this, "Can't delete pet from database", Toast.LENGTH_LONG).show();
-									
-								}
+
+                            	Intent intent = new Intent(ListPetActivityPager.this, AddPetActivity.class);
+                            	intent.putExtra("intentId", currentPet.getId());
+                            	intent.putExtra("intentPetName", currentPet.getPetName());
+                            	intent.putExtra("intentComment", currentPet.getDescription());
+                            	intent.putExtra("intentKalbiya", currentPet.getKalbiya());
+                            	intent.putExtra("intentNeedMoney", currentPet.getMoneyNeeded());
+                            	intent.putExtra("intentHaveMoney", currentPet.getMoneyHave());
+                            	intent.putExtra("intentDeathDate", currentPet.getDeathDate());
+                            	intent.putExtra("intentPicture", bArray);
+                                startActivity(intent);
+
                             }
                     });
                     builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -134,7 +140,6 @@ public class ListPetActivityPager extends Activity {
                         }
                 });
                     builder.show();
-					// TODO Auto-generated method stub
 					return false;
 				}
 			});
@@ -166,7 +171,6 @@ public class ListPetActivityPager extends Activity {
 		@Override
 		public boolean isViewFromObject(View view, Object object) {
 			return view == ((RelativeLayout) object);
-//			return view == ((ImageView) object);
 		}
 
 		@Override
