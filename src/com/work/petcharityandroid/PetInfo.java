@@ -1,20 +1,14 @@
 package com.work.petcharityandroid;
 
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.os.Build;
 
 public class PetInfo extends Activity {
 
@@ -23,11 +17,11 @@ public class PetInfo extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pet_info);
 
-		TextView txtName = (TextView) findViewById(R.id.pagerPetName);
-		TextView txtDescription = (TextView) findViewById(R.id.description);
-		TextView txtKalbiya = (TextView) findViewById(R.id.kalbiya);
-		TextView txtNeedmoney = (TextView) findViewById(R.id.needmoney);
-		TextView txtHavemoney = (TextView) findViewById(R.id.havemoney);
+		TextView txtName = (TextView) findViewById(R.id.editPetName);
+		TextView txtDescription = (TextView) findViewById(R.id.txtKalbiyaPhone);
+		TextView txtKalbiya = (TextView) findViewById(R.id.txtKalbiyaRespPerson);
+		TextView txtNeedmoney = (TextView) findViewById(R.id.txtRespPersonPhone);
+		TextView txtHavemoney = (TextView) findViewById(R.id.txtPayPalAcc);
 		TextView txtDeathdate = (TextView) findViewById(R.id.deathdate);
 		ImageView picture = (ImageView) findViewById(R.id.picture);
 		

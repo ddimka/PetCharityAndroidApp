@@ -19,7 +19,7 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/pagerPetName"
+                android:id="@+id/txtPetName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_PetName"
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/description"
+                android:id="@+id/txtComment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_PetDesc"
@@ -63,29 +63,26 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/kalbiya"
+                android:id="@+id/txtKalbiya"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_Kalbiya"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="10sp" />
-
-            <EditText
-                android:id="@+id/editKalbiya"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:textSize="10sp" />
         </LinearLayout>
+
+        <Spinner
+            android:id="@+id/editKalbiya"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/needmoney"
+                android:id="@+id/txtNeedMoney"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_MoneyNeeded"
@@ -107,7 +104,7 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/havemoney"
+                android:id="@+id/txtHaveMoney"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_HaveMoney"

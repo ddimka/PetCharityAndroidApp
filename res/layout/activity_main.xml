@@ -33,4 +33,16 @@
         android:layout_height="wrap_content"
         android:text="@string/lbl_AboutApp" />
 
+    <Button
+        android:id="@+id/btnAddKalbiya"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_AddKalbiya" />
+
+    <Button
+        android:id="@+id/btnListKalbiya"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_ListKalbiya" />
+
 </LinearLayout>

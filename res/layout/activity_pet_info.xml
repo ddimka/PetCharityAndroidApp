@@ -40,7 +40,7 @@
             </FrameLayout>
 
             <TextView
-                android:id="@+id/pagerPetName"
+                android:id="@+id/editPetName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -48,7 +48,7 @@
                 android:textColor="@color/White" />
 
             <TextView
-                android:id="@+id/description"
+                android:id="@+id/txtKalbiyaPhone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -56,7 +56,7 @@
                 android:textColor="@color/White" />
 
             <TextView
-                android:id="@+id/kalbiya"
+                android:id="@+id/txtKalbiyaRespPerson"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -64,7 +64,7 @@
                 android:textColor="@color/White" />
 
             <TextView
-                android:id="@+id/needmoney"
+                android:id="@+id/txtRespPersonPhone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -72,7 +72,7 @@
                 android:textColor="@color/White" />
 
             <TextView
-                android:id="@+id/havemoney"
+                android:id="@+id/txtPayPalAcc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

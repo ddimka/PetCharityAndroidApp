@@ -1,27 +1,14 @@
 package com.work.petcharityandroid;
 
-import java.io.IOException;
-import java.util.List;
- 
-import com.google.api.client.extensions.android.http.AndroidHttp;
-import com.google.api.client.json.gson.GsonFactory;
-import com.work.petcharity.petendpoint.Petendpoint;
-import com.work.petcharity.petendpoint.model.CollectionResponsePet;
-import com.work.petcharity.petendpoint.model.Pet;
- 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Toast;
  
 public class MainActivity extends Activity {
         
@@ -72,8 +59,8 @@ public class MainActivity extends Activity {
                 });
                 
                 //Event Listener for Add Quote button
-                Button btnAddQuote = (Button)findViewById(R.id.btnAddPet);
-                btnAddQuote.setOnClickListener(new OnClickListener() {
+                Button btnAddPet = (Button)findViewById(R.id.btnAddPet);
+                btnAddPet.setOnClickListener(new OnClickListener() {
                         
                         @Override
                         public void onClick(View v) {
@@ -82,6 +69,25 @@ public class MainActivity extends Activity {
                         }
                 });
                 
+                Button btnAddKalbiya = (Button)findViewById(R.id.btnAddKalbiya);
+                btnAddKalbiya.setOnClickListener(new OnClickListener() {
+                        
+                        @Override
+                        public void onClick(View v) {
+                                Intent myIntent = new Intent(MainActivity.this, AddKalbiyaActivity.class);
+                                startActivity(myIntent);
+                        }
+                });
+                
+                Button btnListKalbiya = (Button)findViewById(R.id.btnListKalbiya);
+                btnListKalbiya.setOnClickListener(new OnClickListener() {
+                        
+                        @Override
+                        public void onClick(View v) {
+                                Intent myIntent = new Intent(MainActivity.this, ListKalbiyaActivity.class);
+                                startActivity(myIntent);
+                        }
+                });
         }
  
         @Override

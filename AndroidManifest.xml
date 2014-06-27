@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-	<uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
     <application
         android:allowBackup="true"
@@ -44,6 +44,18 @@
         <activity
             android:name="com.work.petcharityandroid.ListPetActivityPager"
             android:label="@string/title_activity_list_pet_activity_pager" >
+        </activity>
+        <activity
+            android:name="com.work.petcharityandroid.AddKalbiyaActivity"
+            android:label="@string/title_activity_add_kalbiya" >
+        </activity>
+        <activity
+            android:name="com.work.petcharityandroid.ListKalbiya"
+            android:label="@string/title_activity_list_kalbiya" >
+        </activity>
+        <activity
+            android:name="com.work.petcharityandroid.ListKalbiyaActivity"
+            android:label="@string/title_activity_list_kalbiya" >
         </activity>
     </application>
 

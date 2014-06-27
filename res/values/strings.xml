@@ -20,5 +20,14 @@
     <string name="title_activity_pet_info">PetInfo</string>
     <string name="title_activity_list_pet_activity_pager">ListPetActivityPager</string>
     <string name="lblListPetPager">Pet list slider</string>
+    <string name="lbl_AddKalbiya">Add Kalbiya</string>
+    <string name="title_activity_add_kalbiya">AddKalbiyaActivity</string>
+    <string name="lbl_KalbiyaName">Name</string>
+    <string name="lbl_KalbiyaPhone">Phone</string>
+    <string name="lbl_RestPerson">Chief</string>
+    <string name="lbl_RespPersonPhone">Chief Phone</string>
+    <string name="lbl_PayPalAcc">PayPal email</string>
+    <string name="title_activity_list_kalbiya">ListKalbiya</string>
+    <string name="lbl_ListKalbiya">Kalbiya list</string>
 
 </resources>
