@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.json.gson.GsonFactory;
 import com.work.petcharity.petendpoint.Petendpoint;
+import com.work.petcharity.petendpoint.Petendpoint.RemovePet;
 import com.work.petcharity.petendpoint.model.CollectionResponsePet;
 import com.work.petcharity.petendpoint.model.Pet;
 
@@ -29,7 +30,6 @@ import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ListPetActivityPager extends Activity {
 
@@ -40,6 +40,8 @@ public class ListPetActivityPager extends Activity {
 	private ViewPager pictPager;
 	private CollectionResponsePet pets = null;
 	private Petendpoint service;
+	private Pet currentPet;
+
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_pet_activity_pager);
@@ -89,6 +91,53 @@ public class ListPetActivityPager extends Activity {
 		}
 	}
 
+	private class DeletePetAsyncTask extends AsyncTask<Object, Void, Pet> {
+		private ProgressDialog pd;
+		Context context;
+		
+		public DeletePetAsyncTask(Context context) {
+			this.context = context;
+		}
+		protected void onPreExecute() {
+			super.onPreExecute();
+			Log.d("Test", "Start dialog");
+			pd = new ProgressDialog(context);
+			pd.setMessage("Deleting the pet...");
+			pd.show();
+		}
+
+		protected Pet doInBackground(Object... params) {
+			RemovePet response = null;
+			try {
+
+				Log.d("Test", "Pet = " + currentPet.getPetName() + " " + currentPet.getId() + " " + currentPet.getKalbiya());
+/*				Petendpoint.Builder builder = new Petendpoint.Builder(
+						AndroidHttp.newCompatibleTransport(),
+						new GsonFactory(), null);
+				Petendpoint service = builder.build();*/
+				Log.d("Test", "Before delete");
+				response = service.removePet(currentPet.getId());
+				Log.d("Test", "Response = " + response);
+				
+				Log.d("Test", "After delete");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+			
+		}
+
+		protected void onPostExecute(Pet pet) {
+			// Clear the progress dialog and the fields
+			pd.dismiss();
+			Log.d("Test", "End dialog");
+			Intent intent = new Intent(ListPetActivityPager.this, MainActivity.class);
+			startActivity(intent);
+		}
+
+	}
+	
 	private class MyPagerAdapter extends PagerAdapter {
 
 		@Override
@@ -99,9 +148,10 @@ public class ListPetActivityPager extends Activity {
 		@Override
 		public Object instantiateItem(View collection, final int position) {
 
-			final Pet currentPet = allPetsList.get(position); // - 1
-			final byte[] bArray = currentPet.decodePicture(); 
-			Bitmap bitmap = BitmapFactory.decodeByteArray(bArray, 0, bArray.length);
+			currentPet = allPetsList.get(position); // - 1
+			final byte[] bArray = currentPet.decodePicture();
+			Bitmap bitmap = BitmapFactory.decodeByteArray(bArray, 0,
+					bArray.length);
 			LayoutInflater inflater = (LayoutInflater) collection.getContext()
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			View layout = inflater.inflate(R.layout.pet_info_pager, null);
@@ -109,55 +159,89 @@ public class ListPetActivityPager extends Activity {
 			ImageView petImage = (ImageView) layout.findViewById(R.id.petImage);
 			petImage.setImageBitmap(bitmap);
 			petImage.setOnLongClickListener(new OnLongClickListener() {
-				
+
 				@Override
 				public boolean onLongClick(View v) {
-//					Toast.makeText(ListPetActivityPager.this, "ID = " + currentPet.getId(), Toast.LENGTH_LONG).show();
-					AlertDialog.Builder builder = new AlertDialog.Builder(ListPetActivityPager.this);                
-                    builder.setTitle("Name: " + currentPet.getPetName());
-                    builder.setMessage("Do you want to edit?");
-                    builder.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-                            
-                            public void onClick(DialogInterface dialog, int which) {
+					// Toast.makeText(ListPetActivityPager.this, "ID = " +
+					// currentPet.getId(), Toast.LENGTH_LONG).show();
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							ListPetActivityPager.this);
+					builder.setTitle("Name: " + currentPet.getPetName());
+					builder.setMessage("What do you want to do?");
+					builder.setPositiveButton("Edit",
+							new DialogInterface.OnClickListener() {
 
-                            	Intent intent = new Intent(ListPetActivityPager.this, AddPetActivity.class);
-                            	intent.putExtra("intentId", currentPet.getId());
-                            	intent.putExtra("intentPetName", currentPet.getPetName());
-                            	intent.putExtra("intentComment", currentPet.getDescription());
-                            	intent.putExtra("intentKalbiya", currentPet.getKalbiya());
-                            	intent.putExtra("intentNeedMoney", currentPet.getMoneyNeeded());
-                            	intent.putExtra("intentHaveMoney", currentPet.getMoneyHave());
-                            	intent.putExtra("intentDeathDate", currentPet.getDeathDate());
-                            	intent.putExtra("intentPicture", bArray);
-                                startActivity(intent);
+								public void onClick(DialogInterface dialog,
+										int which) {
 
-                            }
-                    });
-                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        
-                        public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                        }
-                });
-                    builder.show();
+									Intent intent = new Intent(
+											ListPetActivityPager.this,
+											AddPetActivity.class);
+									intent.putExtra("intentId",
+											currentPet.getId());
+									intent.putExtra("intentPetName",
+											currentPet.getPetName());
+									intent.putExtra("intentComment",
+											currentPet.getDescription());
+									intent.putExtra("intentKalbiya",
+											currentPet.getKalbiya());
+									intent.putExtra("intentNeedMoney",
+											currentPet.getMoneyNeeded());
+									intent.putExtra("intentHaveMoney",
+											currentPet.getMoneyHave());
+									intent.putExtra("intentDeathDate",
+											currentPet.getDeathDate());
+									intent.putExtra("intentPicture", bArray);
+									startActivity(intent);
+
+								}
+							});
+
+					builder.setNeutralButton("Delete",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									new DeletePetAsyncTask(ListPetActivityPager.this).execute();
+
+									
+								}
+							});
+					builder.setNegativeButton("Cancel",
+							new DialogInterface.OnClickListener() {
+
+								public void onClick(DialogInterface dialog,
+										int which) {
+									dialog.dismiss();
+								}
+							});
+					builder.show();
 					return false;
 				}
 			});
-			
+
 			TextView petName = (TextView) layout.findViewById(R.id.petName);
-			TextView petDescription = (TextView) layout.findViewById(R.id.petDescription);
-			TextView petKalbiya = (TextView) layout.findViewById(R.id.petKalbiya);
-			TextView petNeedMoney = (TextView) layout.findViewById(R.id.petNeedMoney);
-			TextView petHaveMoney = (TextView) layout.findViewById(R.id.petHaveMoney);
-			TextView petDeathDate = (TextView) layout.findViewById(R.id.petDeathDate);
-			
+			TextView petDescription = (TextView) layout
+					.findViewById(R.id.petDescription);
+			TextView petKalbiya = (TextView) layout
+					.findViewById(R.id.petKalbiya);
+			TextView petNeedMoney = (TextView) layout
+					.findViewById(R.id.petNeedMoney);
+			TextView petHaveMoney = (TextView) layout
+					.findViewById(R.id.petHaveMoney);
+			TextView petDeathDate = (TextView) layout
+					.findViewById(R.id.petDeathDate);
+
 			petName.setText("Pet name:" + currentPet.getPetName());
-			petDescription.setText("Description:" + currentPet.getDescription());
+			petDescription
+					.setText("Description:" + currentPet.getDescription());
 			petKalbiya.setText("Kalbiya:" + currentPet.getKalbiya());
 			petNeedMoney.setText("Need money:" + currentPet.getMoneyNeeded());
-			petHaveMoney.setText("Already have money:" + currentPet.getMoneyHave());
+			petHaveMoney.setText("Already have money:"
+					+ currentPet.getMoneyHave());
 			petDeathDate.setText("Death date:" + currentPet.getDeathDate());
-			
+
 			((ViewPager) collection).addView(layout, 0);
 
 			return layout;

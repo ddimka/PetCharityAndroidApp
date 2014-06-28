@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -50,14 +49,16 @@ public class AddPetActivity extends Activity {
 	private static final int LOAD_IMAGE_FROM_CAMERA = 1;
 	private static final int LOAD_IMAGE_FROM_GALERY = 2;
 	private static final int ADD_NEW_PET = 3;
-	private static final int UPDATE_PET = 3;
+	private static final int UPDATE_PET = 4;
 	EditText editPetName;
 	EditText editComment;
 	Spinner editKalbiya;
 	EditText editNeedMoney;
 	EditText editHaveMoney;
 	TextView editDeathDate;
+	TextView selectKalbiya;
 	ImageView pictFrame;
+	Button btnAddUpdate;
 	Bitmap captureBmp;
 	Bitmap smallBmp;
 	byte[] bArray;
@@ -67,7 +68,10 @@ public class AddPetActivity extends Activity {
 	int mYear;
 	int mMonth;
 	int mDay;
-
+	List<Kalbiya> allKalbiyaList;
+	ArrayAdapter<String> adapter;
+	String fromIntentKalbiya;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -82,14 +86,16 @@ public class AddPetActivity extends Activity {
 
 		Intent intent = getIntent();
 
-		Long fromIntentId = intent.getLongExtra("intentId", 0);
+		final Long fromIntentId = intent.getLongExtra("intentId", 0);
 		String fromIntentPetName = intent.getStringExtra("intentPetName");
 		String fromIntentComment = intent.getStringExtra("intentComment");
-		String fromIntentKalbiya = intent.getStringExtra("intentKalbiya");
+		fromIntentKalbiya = intent.getStringExtra("intentKalbiya");
 		String fromIntentNeedMoney = intent.getStringExtra("intentNeedMoney");
 		String fromIntentHaveMoney = intent.getStringExtra("intentHaveMoney");
 		String fromIntentDeathDate = intent.getStringExtra("intentDeathDate");
 		byte[] fromIntentPicture = intent.getByteArrayExtra("intentPicture");
+		
+
 
 		Log.d("Test", "Id = " + fromIntentId);
 
@@ -100,22 +106,22 @@ public class AddPetActivity extends Activity {
 		editHaveMoney = (EditText) findViewById(R.id.editHaveMoney);
 		editDeathDate = (TextView) findViewById(R.id.editDeathDate);
 		pictFrame = (ImageView) findViewById(R.id.imgFrame);
+		btnAddUpdate = (Button) findViewById(R.id.btnAddPet);
 
-		if (fromIntentPetName == "") {
+		Log.d("Test", "Update = " + fromIntentPetName);
+		if (fromIntentId == 0) {
 			editPetName.setText("");
 			process = ADD_NEW_PET;
+			btnAddUpdate.setText("Add");
 		} else {
 			editPetName.setText(fromIntentPetName);
 			process = UPDATE_PET;
+			btnAddUpdate.setText("Update");
 		}
 		if (fromIntentComment == "")
 			editComment.setText("");
 		else
 			editComment.setText(fromIntentComment);
-
-		if (fromIntentKalbiya == "")
-			editKalbiya.setSelected(false);
-
 		if (fromIntentNeedMoney == "")
 			editNeedMoney.setText("");
 		else
@@ -124,7 +130,7 @@ public class AddPetActivity extends Activity {
 			editHaveMoney.setText("");
 		else
 			editHaveMoney.setText(fromIntentHaveMoney);
-
+		
 		if (fromIntentPicture == null)
 			bArray = null;
 		else {
@@ -133,7 +139,7 @@ public class AddPetActivity extends Activity {
 			pictFrame.setImageBitmap(smallBmp);
 		}
 
-		if (fromIntentDeathDate == "")
+		if (fromIntentDeathDate == null)
 			editDeathDate.setText(mDay + "/" + mMonth + "/" + mYear);
 		else
 			editDeathDate.setText(fromIntentDeathDate);
@@ -204,13 +210,13 @@ public class AddPetActivity extends Activity {
 			}
 		});
 
-		// Event Listener for About App button
-		Button btnAddPet = (Button) findViewById(R.id.btnAddQuote);
-		btnAddPet.setOnClickListener(new OnClickListener() {
+		btnAddUpdate.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
+				Long txtPetId = fromIntentId;
+				Log.d("Test", "txtPetId = " + txtPetId);
 				String txtPetName = editPetName.getText().toString().trim();
 				String txtComment = editComment.getText().toString().trim();
 				String txtKalbiya = editKalbiya.getSelectedItem()
@@ -233,16 +239,16 @@ public class AddPetActivity extends Activity {
 				bArray = bos.toByteArray();
 
 				// Go ahead and perform the transaction
-				Object[] params = { txtPetName, txtComment, txtKalbiya,
+				Object[] params = { txtPetId, txtPetName, txtComment, txtKalbiya,
 						txtNeedMoney, txtHaveMoney, bArray, txtDeathDate };
 				
+				Log.d("Test", "process = " + process);
 				if (process == ADD_NEW_PET) {
-					// Check if values are provided
-					
+					Log.d("Test", "Adding new pet");
 					new AddPetAsyncTask(AddPetActivity.this).execute(params);
 				}
 				if (process == UPDATE_PET) {
-					
+					Log.d("Test", "Updating pet");
 					new UpdatePetAsyncTask(AddPetActivity.this).execute(params);
 				}
 				
@@ -271,9 +277,6 @@ public class AddPetActivity extends Activity {
 				try {
 					captureBmp = Media.getBitmap(getContentResolver(),
 							Uri.fromFile(fileFromCamera));
-					// Log.d("Test", file.toString());
-					// do whatever you want with the bitmap (Resize, Rename, Add
-					// To Gallery, etc)
 					smallBmp = ShrinkBitmap(fileFromCamera.toString(), 300, 300);
 					pictFrame.setImageBitmap(captureBmp);
 
@@ -301,10 +304,6 @@ public class AddPetActivity extends Activity {
 					try {
 						captureBmp = Media.getBitmap(getContentResolver(),
 								Uri.fromFile(fileFromGalery));
-						// Log.d("Test", file.toString());
-						// do whatever you want with the bitmap (Resize, Rename,
-						// Add
-						// To Gallery, etc)
 						smallBmp = ShrinkBitmap(picturePath.toString(), 300,
 								300);
 						pictFrame.setImageBitmap(captureBmp);
@@ -367,13 +366,14 @@ public class AddPetActivity extends Activity {
 						new GsonFactory(), null);
 				Petendpoint service = builder.build();
 				Pet pet = new Pet();
-				pet.setPetName((String) (params[0]));
-				pet.setDescription((String) (params[1]));
-				pet.setKalbiya((String) (params[2]));
-				pet.setMoneyNeeded((String) (params[3]));
-				pet.setMoneyHave((String) (params[4]));
-				pet.encodePicture((byte[]) params[5]);
-				pet.setDeathDate((String) (params[6]));
+				//pet.setId((Long) (params[0]));
+				pet.setPetName((String) (params[1]));
+				pet.setDescription((String) (params[2]));
+				pet.setKalbiya((String) (params[3]));
+				pet.setMoneyNeeded((String) (params[4]));
+				pet.setMoneyHave((String) (params[5]));
+				pet.encodePicture((byte[]) params[6]);
+				pet.setDeathDate((String) (params[7]));
 
 				response = service.insertPet(pet).execute();
 			} catch (Exception e) {
@@ -385,19 +385,8 @@ public class AddPetActivity extends Activity {
 		protected void onPostExecute(Pet pet) {
 			// Clear the progress dialog and the fields
 			pd.dismiss();
-			editPetName.setText("");
-			editComment.setText("");
-			// editKalbiya.setSelection();
-			editNeedMoney.setText("");
-			editHaveMoney.setText("");
-			pictFrame.setImageDrawable(getResources().getDrawable(
-					R.drawable.ic_launcher));
-			editDeathDate.setText(calendar.get(Calendar.DAY_OF_MONTH) + "/"
-					+ calendar.get(Calendar.MONTH) + "/"
-					+ calendar.get(Calendar.YEAR));
-			// Display success message to user
-			Toast.makeText(getBaseContext(), "Pet added succesfully",
-					Toast.LENGTH_SHORT).show();
+			Intent intent = new Intent(AddPetActivity.this, MainActivity.class);
+			startActivity(intent);
 		}
 
 	}
@@ -425,13 +414,14 @@ public class AddPetActivity extends Activity {
 						new GsonFactory(), null);
 				Petendpoint service = builder.build();
 				Pet pet = new Pet();
-				pet.setPetName((String) (params[0]));
-				pet.setDescription((String) (params[1]));
-				pet.setKalbiya((String) (params[2]));
-				pet.setMoneyNeeded((String) (params[3]));
-				pet.setMoneyHave((String) (params[4]));
-				pet.encodePicture((byte[]) params[5]);
-				pet.setDeathDate((String) (params[6]));
+				pet.setId((Long) (params[0]));
+				pet.setPetName((String) (params[1]));
+				pet.setDescription((String) (params[2]));
+				pet.setKalbiya((String) (params[3]));
+				pet.setMoneyNeeded((String) (params[4]));
+				pet.setMoneyHave((String) (params[5]));
+				pet.encodePicture((byte[]) params[6]);
+				pet.setDeathDate((String) (params[7]));
 
 				response = service.updatePet(pet).execute();
 			} catch (Exception e) {
@@ -443,17 +433,8 @@ public class AddPetActivity extends Activity {
 		protected void onPostExecute(Pet pet) {
 			// Clear the progress dialog and the fields
 			pd.dismiss();
-			editPetName.setText("");
-			editComment.setText("");
-			// editKalbiya.setSelection();
-			editNeedMoney.setText("");
-			editHaveMoney.setText("");
-			pictFrame.setImageDrawable(getResources().getDrawable(
-					R.drawable.ic_launcher));
-			editDeathDate.setText(calendar.get(Calendar.DAY_OF_MONTH) + "/"
-					+ calendar.get(Calendar.MONTH) + "/"
-					+ calendar.get(Calendar.YEAR));
-			// Display success message to user
+			Intent intent = new Intent(AddPetActivity.this, MainActivity.class);
+			startActivity(intent);
 			Toast.makeText(getBaseContext(), "Pet updated succesfully",
 					Toast.LENGTH_SHORT).show();
 		}
@@ -463,15 +444,14 @@ public class AddPetActivity extends Activity {
 	private class KalbiyaListAsyncTask extends
 			AsyncTask<Void, Void, CollectionResponseKalbiya> {
 		// Context context;
-		List<Kalbiya> allKalbiyaList;
 
-		/*
-		 * public KalbiyaListAsyncTask(Context context) { this.context =
-		 * context; }
-		 */
+		private ProgressDialog pd;
 
 		protected void onPreExecute() {
 			super.onPreExecute();
+			pd = new ProgressDialog(AddPetActivity.this);
+			pd.setMessage("Retrieving kalbya's list...");
+			pd.show();
 		}
 
 		protected CollectionResponseKalbiya doInBackground(Void... unused) {
@@ -491,18 +471,21 @@ public class AddPetActivity extends Activity {
 		}
 
 		protected void onPostExecute(CollectionResponseKalbiya kalbiya) {
-			// pd.dismiss();
+		    pd.dismiss();
 			List<String> data = new ArrayList<String>();
-
+			
 			if (allKalbiyaList != null) {
 				for (int i = 0; i < allKalbiyaList.size(); i++)
 					data.add(String.valueOf((allKalbiyaList.get(i).getName())));
 
-				ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+				adapter = new ArrayAdapter<String>(
 						AddPetActivity.this,
 						android.R.layout.simple_spinner_item, data);
 				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 				editKalbiya.setAdapter(adapter);
+				for (int i = 0; i < allKalbiyaList.size(); i++)
+					if (allKalbiyaList.get(i).getName().equals(fromIntentKalbiya))
+						editKalbiya.setSelection(i);
 			} else {
 				Toast.makeText(AddPetActivity.this, "Internet problem?",
 						Toast.LENGTH_LONG).show();
