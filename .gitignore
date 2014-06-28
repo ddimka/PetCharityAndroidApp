@@ -16,8 +16,6 @@ lint
 *.class
  
 # generated files
-bin/
-gen/
 classes/
 gen-external-apklibs/
  
