@@ -18,6 +18,8 @@
 
 package com.work.petcharity.kalbiyaendpoint;
 
+import com.work.petcharityandroid.Constants;
+
 /**
  * Service definition for Kalbiyaendpoint (v1).
  *
@@ -57,7 +59,7 @@ public class Kalbiyaendpoint extends com.google.api.client.googleapis.services.j
    *
    * @since 1.7
    */
-  public static final String DEFAULT_ROOT_URL = "https://ardent-rarity-610.appspot.com/_ah/api/";
+  public static final String DEFAULT_ROOT_URL = Constants.APP_ROOT_URL;
 
   /**
    * The default encoded service path of the service. This is determined when the library is
@@ -65,7 +67,7 @@ public class Kalbiyaendpoint extends com.google.api.client.googleapis.services.j
    *
    * @since 1.7
    */
-  public static final String DEFAULT_SERVICE_PATH = "kalbiyaendpoint/v1/";
+  public static final String DEFAULT_SERVICE_PATH = Constants.APP_SERVICE_KALBIYA_PATH;
 
   /**
    * The default encoded base URL of the service. This is determined when the library is generated

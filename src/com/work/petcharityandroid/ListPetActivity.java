@@ -20,6 +20,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -29,8 +31,9 @@ public class ListPetActivity extends ListActivity{
 	private TextView tv = null;
 	private ArrayList<Map<String,String>> list = null;
 	List<Pet> allPetsList;
+
 	private SimpleAdapter adapter = null;
-	private String[] from = { "Name", "Description" };
+	private String[] from = { "Name", "Kennel" };
 	private int[] to = { android.R.id.text1, android.R.id.text2 };
 
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +56,7 @@ public class ListPetActivity extends ListActivity{
 		  protected void onPreExecute(){ 
 		     super.onPreExecute();
 		          pd = new ProgressDialog(context);
-		          pd.setMessage("Retrieving pets...");
+		          pd.setMessage("Prepearing...");
 		          pd.show();    
 		  }
 
@@ -80,8 +83,8 @@ public class ListPetActivity extends ListActivity{
 				for (Pet pet : allPetsList) {
 					HashMap<String, String> item = new HashMap<String, String>();
 
-					item.put("Name", pet.getPetName());
-					item.put("Description", pet.getDescription());
+					item.put("Name", "Name: " + pet.getPetName());
+					item.put("Kennel", pet.getKalbiya());
 			 	    list.add(item);
 			 	    
 
@@ -102,6 +105,7 @@ public class ListPetActivity extends ListActivity{
 
 	    	
 	    	Intent intent = new Intent(this, PetInfo.class); 
+	    	intent.putExtra("id", currentPet.getId());
 	    	intent.putExtra("name", currentPet.getPetName());
 	        intent.putExtra("description", currentPet.getDescription());
 	    	intent.putExtra("kalbiya", currentPet.getKalbiya());
@@ -111,25 +115,25 @@ public class ListPetActivity extends ListActivity{
 	    	intent.putExtra("deathdate", currentPet.getDeathDate());
 
 	        startActivity(intent);
-	    	
-/*	    	AlertDialog.Builder builder = new AlertDialog.Builder(this);                
-            builder.setTitle("About " + currentPet.getPetName());
-            StringBuilder text = new StringBuilder();
-            text.append("Description: " + currentPet.getDescription() + "\n");
-            text.append("Place: " + currentPet.getKalbiya() + "\n");
-            text.append("Need money: " + currentPet.getMoneyNeeded() + "\n");
-            text.append("Already have: " + currentPet.getMoneyHave() + "\n");
-            text.append("Death date: " + currentPet.getDeathDate());
 
-            builder.setMessage(text);
-            builder.setPositiveButton("OK",new DialogInterface.OnClickListener() {
-                    
-                    public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                    }
-            });
-            builder.show(); */
 
 	    }
+		@Override
+		public boolean onCreateOptionsMenu(Menu menu) {
+
+			// Inflate the menu; this adds items to the action bar if it is present.
+			//getMenuInflater().inflate(R.menu.pet_info, menu);
+			menu.add("Picture view");
+			return true;
+		}
+
+		@Override
+		public boolean onOptionsItemSelected(MenuItem item) {
+
+			Intent intent = new Intent(ListPetActivity.this, ListPetActivityPager.class);
+			startActivity(intent);
+			return super.onOptionsItemSelected(item);
+		}
+	   
 		
 }

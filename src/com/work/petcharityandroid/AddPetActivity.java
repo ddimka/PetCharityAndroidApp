@@ -35,115 +35,105 @@ import android.provider.MediaStore.Images.Media;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class AddPetActivity extends Activity {
+public class AddPetActivity extends Activity implements Constants {
 
-	private static final int LOAD_IMAGE_FROM_CAMERA = 1;
-	private static final int LOAD_IMAGE_FROM_GALERY = 2;
-	private static final int ADD_NEW_PET = 3;
-	private static final int UPDATE_PET = 4;
 	EditText editPetName;
 	EditText editComment;
-	Spinner editKalbiya;
 	EditText editNeedMoney;
 	EditText editHaveMoney;
-	TextView editDeathDate;
-	TextView selectKalbiya;
 	ImageView pictFrame;
-	Button btnAddUpdate;
+	TextView editDeathDate;
+	TextView editKalbiya;
 	Bitmap captureBmp;
 	Bitmap smallBmp;
+	int updateFlag;
+
 	byte[] bArray;
 	ByteArrayOutputStream bos;
+	Button btnSave;
+
 	Calendar calendar;
 	int process;
 	int mYear;
 	int mMonth;
 	int mDay;
+
 	List<Kalbiya> allKalbiyaList;
-	ArrayAdapter<String> adapter;
-	String fromIntentKalbiya;
-	
+	List<String> kalbiyaNames;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_pet);
+		updateFlag = UPDATE_WITHOUT_PICTURE;
+		kalbiyaNames = new ArrayList<String>();
+		allKalbiyaList = new ArrayList<Kalbiya>();
 
-		calendar = Calendar.getInstance();
-		final int mYear = calendar.get(Calendar.YEAR);
-		final int mMonth = calendar.get(Calendar.MONTH);
-		final int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+		Intent intent = getIntent();
+		final Long idFromIntent = intent.getLongExtra("intentId", 0);
+		String nameFromIntent = intent.getStringExtra("intentPetName");
+		String descFromIntent = intent.getStringExtra("intentComment");
+		String kalbiyaFromIntent = intent.getStringExtra("intentKalbiya");
+		String needMoneyFromIntent = intent.getStringExtra("intentNeedMoney");
+		String haveMoneyFromIntent = intent.getStringExtra("intentHaveMoney");
+		String deathDateFromIntent = intent.getStringExtra("intentDeathDate");
+		bArray = intent.getByteArrayExtra("intentPicture");
+		Log.d("Test", "bArray from Intent = " + bArray);
 
 		new KalbiyaListAsyncTask().execute();
 
-		Intent intent = getIntent();
+		calendar = Calendar.getInstance();
 
-		final Long fromIntentId = intent.getLongExtra("intentId", 0);
-		String fromIntentPetName = intent.getStringExtra("intentPetName");
-		String fromIntentComment = intent.getStringExtra("intentComment");
-		fromIntentKalbiya = intent.getStringExtra("intentKalbiya");
-		String fromIntentNeedMoney = intent.getStringExtra("intentNeedMoney");
-		String fromIntentHaveMoney = intent.getStringExtra("intentHaveMoney");
-		String fromIntentDeathDate = intent.getStringExtra("intentDeathDate");
-		byte[] fromIntentPicture = intent.getByteArrayExtra("intentPicture");
-		
-
-
-		Log.d("Test", "Id = " + fromIntentId);
-
-		editPetName = (EditText) findViewById(R.id.editPetName);
-		editComment = (EditText) findViewById(R.id.editComment);
-		editKalbiya = (Spinner) findViewById(R.id.editKalbiya);
+		editPetName = (EditText) findViewById(R.id.editName);
+		editComment = (EditText) findViewById(R.id.editDesc);
+		editDeathDate = (TextView) findViewById(R.id.editDeathDate);
+		pictFrame = (ImageView) findViewById(R.id.imagePet);
+		editKalbiya = (TextView) findViewById(R.id.txtKalbiyaName);
 		editNeedMoney = (EditText) findViewById(R.id.editNeedMoney);
 		editHaveMoney = (EditText) findViewById(R.id.editHaveMoney);
-		editDeathDate = (TextView) findViewById(R.id.editDeathDate);
-		pictFrame = (ImageView) findViewById(R.id.imgFrame);
-		btnAddUpdate = (Button) findViewById(R.id.btnAddPet);
 
-		Log.d("Test", "Update = " + fromIntentPetName);
-		if (fromIntentId == 0) {
-			editPetName.setText("");
+		editPetName.setText(nameFromIntent);
+		editComment.setText(descFromIntent);
+		editDeathDate.setText(deathDateFromIntent);
+		// pictFrame
+		editKalbiya.setText(kalbiyaFromIntent);
+		editNeedMoney.setText(needMoneyFromIntent);
+		editHaveMoney.setText(haveMoneyFromIntent);
+
+		btnSave = (Button) findViewById(R.id.btnSave);
+
+		if (idFromIntent == 0) {
 			process = ADD_NEW_PET;
-			btnAddUpdate.setText("Add");
+			mYear = calendar.get(Calendar.YEAR);
+			mMonth = calendar.get(Calendar.MONTH) + 1;
+			mDay = calendar.get(Calendar.DAY_OF_MONTH);
+			String strDay = String.valueOf(mDay);
+			String strMonth = String.valueOf(mMonth);
+			String strYear = String.valueOf(mYear);
+			if (strDay.length() == 1)
+				strDay = "0" + strDay;
+			if (strMonth.length() == 1)
+				strMonth = "0" + strMonth;
+			editDeathDate.setText(strDay + "/" + strMonth + "/" + strYear);
 		} else {
-			editPetName.setText(fromIntentPetName);
+			String[] splitedDate = deathDateFromIntent.split("/");
+			mDay = Integer.parseInt(splitedDate[0]);
+			mMonth = Integer.parseInt(splitedDate[1]);
+			mYear = Integer.parseInt(splitedDate[2]);
+
 			process = UPDATE_PET;
-			btnAddUpdate.setText("Update");
+			Bitmap bitmap = BitmapFactory.decodeByteArray(bArray, 0,
+					bArray.length);
+			pictFrame.setImageBitmap(bitmap);
 		}
-		if (fromIntentComment == "")
-			editComment.setText("");
-		else
-			editComment.setText(fromIntentComment);
-		if (fromIntentNeedMoney == "")
-			editNeedMoney.setText("");
-		else
-			editNeedMoney.setText(fromIntentNeedMoney);
-		if (fromIntentHaveMoney == "")
-			editHaveMoney.setText("");
-		else
-			editHaveMoney.setText(fromIntentHaveMoney);
-		
-		if (fromIntentPicture == null)
-			bArray = null;
-		else {
-			bArray = fromIntentPicture.clone();
-			smallBmp = BitmapFactory.decodeByteArray(bArray, 0, bArray.length);
-			pictFrame.setImageBitmap(smallBmp);
-		}
-
-		if (fromIntentDeathDate == null)
-			editDeathDate.setText(mDay + "/" + mMonth + "/" + mYear);
-		else
-			editDeathDate.setText(fromIntentDeathDate);
-
+		// Log.d("Test", "ID = " + idFromIntent);
 		editDeathDate.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -156,15 +146,56 @@ public class AddPetActivity extends Activity {
 							@Override
 							public void onDateSet(DatePicker view, int year,
 									int monthOfYear, int dayOfMonth) {
-								editDeathDate.setText(dayOfMonth + "/"
-										+ (monthOfYear + 1) + "/" + year);
+
+								String strDay = String.valueOf(dayOfMonth);
+								String strMonth = String
+										.valueOf(monthOfYear + 1);
+								String strYear = String.valueOf(year);
+								if (strDay.length() == 1)
+									strDay = "0" + strDay;
+								if (strMonth.length() == 1)
+									strMonth = "0" + strMonth;
+
+								editDeathDate.setText(strDay + "/" + (strMonth)
+										+ "/" + strYear);
 
 							}
 
 						}, mYear, mMonth, mDay);
+
 				dpd.show();
 
 			}
+		});
+
+		editKalbiya.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				getKalbiyasNames();
+				if (allKalbiyaList != null) {
+					CharSequence[] items = kalbiyaNames
+							.toArray(new CharSequence[kalbiyaNames.size()]);
+					AlertDialog.Builder builder = new AlertDialog.Builder(
+							AddPetActivity.this);
+					builder.setTitle("Make your selection");
+					builder.setItems(items,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int item) {
+									// Do something with the selection
+									editKalbiya.setText(kalbiyaNames.get(item));
+								}
+							});
+					AlertDialog alert = builder.create();
+					alert.show();
+				} else {
+					Toast.makeText(AddPetActivity.this,
+							"Empty list. Please add..", Toast.LENGTH_LONG)
+							.show();
+				}
+			}
+
 		});
 
 		pictFrame.setOnClickListener(new OnClickListener() {
@@ -210,48 +241,42 @@ public class AddPetActivity extends Activity {
 			}
 		});
 
-		btnAddUpdate.setOnClickListener(new OnClickListener() {
+		btnSave.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 
-				Long txtPetId = fromIntentId;
-				Log.d("Test", "txtPetId = " + txtPetId);
+				Long txtPetId = idFromIntent;
 				String txtPetName = editPetName.getText().toString().trim();
 				String txtComment = editComment.getText().toString().trim();
-				String txtKalbiya = editKalbiya.getSelectedItem()
-						.toString().trim();
-				String txtNeedMoney = editNeedMoney.getText().toString()
-						.trim();
-				String txtHaveMoney = editHaveMoney.getText().toString()
-						.trim();
-				// String txtPicture = "";
-				// //editPictureLink.getText().toString().trim();
-				String txtDeathDate = editDeathDate.getText().toString()
-						.trim();
+				String txtNeedMoney = editNeedMoney.getText().toString().trim();
+				String txtHaveMoney = editHaveMoney.getText().toString().trim();
+				String txtDeathDate = editDeathDate.getText().toString().trim();
+				String txtKalbiya = editKalbiya.getText().toString().trim();
 
+				bos = new ByteArrayOutputStream();
+
+				if (updateFlag == UPDATE_WITHOUT_PICTURE)
+					smallBmp = BitmapFactory.decodeByteArray(bArray, 0, bArray.length);
 				if (smallBmp == null) {
 					smallBmp = BitmapFactory.decodeResource(getResources(),
 							R.drawable.ic_launcher);
+
 				}
-				bos = new ByteArrayOutputStream();
+				Log.d("Test", "process " + process);
+				Log.d("Test", "smartBmp: " + smallBmp);
+				Log.d("Test", "bArray: " + bArray);
+
+				// TODO
 				smallBmp.compress(Bitmap.CompressFormat.PNG, 100, bos);
 				bArray = bos.toByteArray();
-
-				// Go ahead and perform the transaction
-				Object[] params = { txtPetId, txtPetName, txtComment, txtKalbiya,
-						txtNeedMoney, txtHaveMoney, bArray, txtDeathDate };
-				
-				Log.d("Test", "process = " + process);
-				if (process == ADD_NEW_PET) {
-					Log.d("Test", "Adding new pet");
+				Object[] params = { txtPetId, txtPetName, txtComment,
+						txtKalbiya, txtNeedMoney, txtHaveMoney, bArray,
+						txtDeathDate };
+				if (process == ADD_NEW_PET)
 					new AddPetAsyncTask(AddPetActivity.this).execute(params);
-				}
-				if (process == UPDATE_PET) {
-					Log.d("Test", "Updating pet");
+				else
 					new UpdatePetAsyncTask(AddPetActivity.this).execute(params);
-				}
-				
 			}
 		});
 
@@ -271,6 +296,7 @@ public class AddPetActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK) {
+			updateFlag = UPDATE_WITH_PICTURE;
 			switch (requestCode) {
 			case LOAD_IMAGE_FROM_CAMERA:
 				final File fileFromCamera = getTempFile(this);
@@ -343,54 +369,6 @@ public class AddPetActivity extends Activity {
 		return bitmap;
 	}
 
-	private class AddPetAsyncTask extends AsyncTask<Object, Void, Pet> {
-		Context context;
-		private ProgressDialog pd;
-
-		public AddPetAsyncTask(Context context) {
-			this.context = context;
-		}
-
-		protected void onPreExecute() {
-			super.onPreExecute();
-			pd = new ProgressDialog(context);
-			pd.setMessage("Adding the pet...");
-			pd.show();
-		}
-
-		protected Pet doInBackground(Object... params) {
-			Pet response = null;
-			try {
-				Petendpoint.Builder builder = new Petendpoint.Builder(
-						AndroidHttp.newCompatibleTransport(),
-						new GsonFactory(), null);
-				Petendpoint service = builder.build();
-				Pet pet = new Pet();
-				//pet.setId((Long) (params[0]));
-				pet.setPetName((String) (params[1]));
-				pet.setDescription((String) (params[2]));
-				pet.setKalbiya((String) (params[3]));
-				pet.setMoneyNeeded((String) (params[4]));
-				pet.setMoneyHave((String) (params[5]));
-				pet.encodePicture((byte[]) params[6]);
-				pet.setDeathDate((String) (params[7]));
-
-				response = service.insertPet(pet).execute();
-			} catch (Exception e) {
-				Log.d("Could not add pet", e.getMessage(), e);
-			}
-			return response;
-		}
-
-		protected void onPostExecute(Pet pet) {
-			// Clear the progress dialog and the fields
-			pd.dismiss();
-			Intent intent = new Intent(AddPetActivity.this, MainActivity.class);
-			startActivity(intent);
-		}
-
-	}
-
 	private class UpdatePetAsyncTask extends AsyncTask<Object, Void, Pet> {
 		Context context;
 		private ProgressDialog pd;
@@ -431,7 +409,6 @@ public class AddPetActivity extends Activity {
 		}
 
 		protected void onPostExecute(Pet pet) {
-			// Clear the progress dialog and the fields
 			pd.dismiss();
 			Intent intent = new Intent(AddPetActivity.this, MainActivity.class);
 			startActivity(intent);
@@ -440,7 +417,7 @@ public class AddPetActivity extends Activity {
 		}
 
 	}
-	
+
 	private class KalbiyaListAsyncTask extends
 			AsyncTask<Void, Void, CollectionResponseKalbiya> {
 		// Context context;
@@ -450,7 +427,7 @@ public class AddPetActivity extends Activity {
 		protected void onPreExecute() {
 			super.onPreExecute();
 			pd = new ProgressDialog(AddPetActivity.this);
-			pd.setMessage("Retrieving kalbya's list...");
+			pd.setMessage("Retrieving kennel's list...");
 			pd.show();
 		}
 
@@ -471,21 +448,21 @@ public class AddPetActivity extends Activity {
 		}
 
 		protected void onPostExecute(CollectionResponseKalbiya kalbiya) {
-		    pd.dismiss();
+			pd.dismiss();
 			List<String> data = new ArrayList<String>();
-			
+
+			if (allKalbiyaList == null) {
+				Toast.makeText(AddPetActivity.this,
+						"Empty list. Please add kennels", Toast.LENGTH_LONG)
+						.show();
+				finish();
+				return;
+			}
+
 			if (allKalbiyaList != null) {
 				for (int i = 0; i < allKalbiyaList.size(); i++)
 					data.add(String.valueOf((allKalbiyaList.get(i).getName())));
 
-				adapter = new ArrayAdapter<String>(
-						AddPetActivity.this,
-						android.R.layout.simple_spinner_item, data);
-				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-				editKalbiya.setAdapter(adapter);
-				for (int i = 0; i < allKalbiyaList.size(); i++)
-					if (allKalbiyaList.get(i).getName().equals(fromIntentKalbiya))
-						editKalbiya.setSelection(i);
 			} else {
 				Toast.makeText(AddPetActivity.this, "Internet problem?",
 						Toast.LENGTH_LONG).show();
@@ -493,5 +470,59 @@ public class AddPetActivity extends Activity {
 			}
 
 		}
+	}
+
+	private class AddPetAsyncTask extends AsyncTask<Object, Void, Pet> {
+		Context context;
+		private ProgressDialog pd;
+
+		public AddPetAsyncTask(Context context) {
+			this.context = context;
+		}
+
+		protected void onPreExecute() {
+			super.onPreExecute();
+			pd = new ProgressDialog(context);
+			pd.setMessage("Adding the pet...");
+			pd.show();
+		}
+
+		protected Pet doInBackground(Object... params) {
+			Pet response = null;
+			try {
+				Petendpoint.Builder builder = new Petendpoint.Builder(
+						AndroidHttp.newCompatibleTransport(),
+						new GsonFactory(), null);
+				Petendpoint service = builder.build();
+				Pet pet = new Pet();
+				pet.setPetName((String) (params[1]));
+				pet.setDescription((String) (params[2]));
+				pet.setKalbiya((String) (params[3]));
+				pet.setMoneyNeeded((String) (params[4]));
+				pet.setMoneyHave((String) (params[5]));
+				pet.encodePicture((byte[]) params[6]);
+				pet.setDeathDate((String) (params[7]));
+
+				response = service.insertPet(pet).execute();
+			} catch (Exception e) {
+				Log.d("Could not add pet", e.getMessage(), e);
+			}
+			return response;
+		}
+
+		protected void onPostExecute(Pet pet) {
+			pd.dismiss();
+			Intent intent = new Intent(AddPetActivity.this, MainActivity.class);
+			startActivity(intent);
+		}
+
+	}
+
+	private void getKalbiyasNames() {
+		kalbiyaNames.clear();
+		if (allKalbiyaList != null)
+			for (int i = 0; i < allKalbiyaList.size(); i++)
+				kalbiyaNames.add(allKalbiyaList.get(i).getName());
+
 	}
 }

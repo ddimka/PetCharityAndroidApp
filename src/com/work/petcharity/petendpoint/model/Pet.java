@@ -18,6 +18,9 @@
 
 package com.work.petcharity.petendpoint.model;
 
+import android.util.Base64;
+
+
 /**
  * Model definition for Pet.
  *
@@ -223,7 +226,8 @@ public final class Pet extends com.google.api.client.json.GenericJson {
    * @since 1.14
    */
   public Pet encodePicture(byte[] picture) {
-    this.picture = com.google.api.client.util.Base64.encodeBase64URLSafeString(picture);
+
+    this.picture = Base64.encodeToString(picture, Base64.DEFAULT); //com.google.api.client.util.Base64.encodeBase64URLSafeString(picture);
     return this;
   }
 

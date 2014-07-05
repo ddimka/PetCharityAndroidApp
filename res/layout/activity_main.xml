@@ -1,48 +1,115 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android1="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
+    android1:background="@drawable/background"
     tools:context=".MainActivity" >
 
-    <Button
-        android:id="@+id/btnAddPet"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/lbl_AddPet" />
+    <FrameLayout
+        android1:layout_width="match_parent"
+        android1:layout_height="match_parent"
+        android1:layout_weight="1" >
+    </FrameLayout>
 
-    <Button
-        android:id="@+id/btnListPet"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/lblListPet" />
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/btnListPetPager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/lblListPetPager" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android1:layout_weight="1"
+            android:orientation="horizontal" >
 
-    <Button
-        android:id="@+id/btnAboutApp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/lbl_AboutApp" />
+            <Button
+                android:id="@+id/btnAddPet"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android1:background="@drawable/dog_icon" />
 
-    <Button
-        android:id="@+id/btnAddKalbiya"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/lbl_AddKalbiya" />
+            <Button
+                android:id="@+id/btnListPetPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android1:background="@drawable/dog_paws_icon" />
 
-    <Button
-        android:id="@+id/btnListKalbiya"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/lbl_ListKalbiya" />
+            <Button
+                android1:id="@+id/btnAddKalbiya"
+                android1:layout_width="match_parent"
+                android1:layout_height="match_parent"
+                android1:layout_weight="1"
+                android1:background="@drawable/dog_house_icon" />
+
+            <Button
+                android1:id="@+id/btnListKalbiya"
+                android1:layout_width="match_parent"
+                android1:layout_height="match_parent"
+                android1:layout_weight="1"
+                android1:background="@drawable/dog_bowl_icon" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android1:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <TextView
+                android1:id="@+id/txtInfo"
+                android1:layout_width="match_parent"
+                android1:layout_height="match_parent"
+                android1:layout_gravity="center_vertical"
+                android1:layout_weight="1"
+                android1:gravity="center"
+                android1:text="Add dog"
+                android1:textSize="12dp"
+                android1:textStyle="bold" />
+
+            <TextView
+                android1:id="@+id/textView2"
+                android1:layout_width="match_parent"
+                android1:layout_height="match_parent"
+                android1:layout_gravity="center_vertical"
+                android1:layout_weight="1"
+                android1:gravity="center"
+                android1:text="Dogs list"
+                android1:textSize="12dp"
+                android1:textStyle="bold" />
+
+            <TextView
+                android1:id="@+id/textView3"
+                android1:layout_width="match_parent"
+                android1:layout_height="match_parent"
+                android1:layout_gravity="center_vertical"
+                android1:layout_weight="1"
+                android1:gravity="center"
+                android1:text="Add \nkennel"
+                android1:textSize="12dp"
+                android1:textStyle="bold" />
+
+            <TextView
+                android1:id="@+id/textView4"
+                android1:layout_width="match_parent"
+                android1:layout_height="match_parent"
+                android1:layout_gravity="center_vertical"
+                android1:layout_weight="1"
+                android1:gravity="center"
+                android1:text="Kennels list"
+                android1:textSize="12dp"
+                android1:textStyle="bold" />
+
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

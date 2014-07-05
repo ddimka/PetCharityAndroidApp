@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">PetCharityAndroid</string>
+    <string name="app_name">Admin console</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_add_pet">AddPetActivity</string>
-    <string name="title_activity_list_pet">ListPetActivity</string>
+    <string name="title_activity_add_pet">Add dog</string>
+    <string name="title_activity_list_pet">Dog list</string>
     <string name="lbl_AddPet">Add pet</string>
     <string name="lblListPet">Pets list</string>
     <string name="lbl_AboutApp">About App</string>
@@ -18,16 +18,18 @@
     <string name="lbl_DeathDate">Death Date</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_pet_info">PetInfo</string>
-    <string name="title_activity_list_pet_activity_pager">ListPetActivityPager</string>
+    <string name="title_activity_list_pet_activity_pager">Dogs list</string>
     <string name="lblListPetPager">Pet list slider</string>
     <string name="lbl_AddKalbiya">Add Kalbiya</string>
-    <string name="title_activity_add_kalbiya">AddKalbiyaActivity</string>
+    <string name="title_activity_add_kalbiya">Add kennel</string>
     <string name="lbl_KalbiyaName">Name</string>
     <string name="lbl_KalbiyaPhone">Phone</string>
     <string name="lbl_RestPerson">Chief</string>
     <string name="lbl_RespPersonPhone">Chief Phone</string>
     <string name="lbl_PayPalAcc">PayPal email</string>
-    <string name="title_activity_list_kalbiya">ListKalbiya</string>
-    <string name="lbl_ListKalbiya">Kalbiya list</string>
+    <string name="title_activity_list_kalbiya">Kennels list</string>
+    <string name="lbl_ListKalbiya">Kennels list</string>
+    <string name="title_activity_add_pet_activity2">Add dog</string>
+    <string name="title_activity_list_outdated">Outdated</string>
 
 </resources>
