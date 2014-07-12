@@ -4,6 +4,7 @@ public interface Constants {
 	static final String APP_ROOT_URL = "https://petcharity-admin-app-32.appspot.com/_ah/api/";
 	static final String APP_SERVICE_PET_PATH = "petendpoint/v1/";
 	static final String APP_SERVICE_KALBIYA_PATH = "kalbiyaendpoint/v1/";
+	static final String APP_SERVICE_PAYMENTS_PATH = "paymentsendpoint/v1/";
 	static final int LOAD_IMAGE_FROM_CAMERA = 1;
 	static final int LOAD_IMAGE_FROM_GALERY = 2;
 	static final int ADD_NEW_PET = 3;

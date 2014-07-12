@@ -31,5 +31,6 @@
     <string name="lbl_ListKalbiya">Kennels list</string>
     <string name="title_activity_add_pet_activity2">Add dog</string>
     <string name="title_activity_list_outdated">Outdated</string>
+    <string name="title_activity_payments_list">PaymentsList</string>
 
 </resources>

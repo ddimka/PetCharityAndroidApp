@@ -12,7 +12,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/txtKalbiyaName"
@@ -20,7 +21,7 @@
             android:layout_height="wrap_content"
             android:text="@string/lbl_KalbiyaName"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="10sp" />
+            android:textSize="15dp" />
 
         <EditText
             android:id="@+id/editKalbiyaName"
@@ -37,7 +38,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/txtKalbiyaPhone"
@@ -45,7 +47,7 @@
             android:layout_height="wrap_content"
             android:text="@string/lbl_KalbiyaPhone"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="10sp" />
+            android:textSize="15dp" />
 
         <EditText
             android:id="@+id/editKalbiyaPhone"
@@ -58,8 +60,9 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/txtKalbiyaRespPerson"
@@ -67,13 +70,12 @@
             android:layout_height="wrap_content"
             android:text="@string/lbl_RestPerson"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="10sp" />
+            android:textSize="15dp" />
 
         <EditText
             android:id="@+id/editRespPerson"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:ems="10"
             android:inputType="textCapWords"
             android:textSize="10sp" />
@@ -81,7 +83,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/txtRespPersonPhone"
@@ -89,7 +92,7 @@
             android:layout_height="wrap_content"
             android:text="@string/lbl_RespPersonPhone"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="10sp" />
+            android:textSize="15dp" />
 
         <EditText
             android:id="@+id/editRespPersonPhone"
@@ -104,7 +107,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/txtPayPalAcc"
@@ -112,7 +116,7 @@
             android:layout_height="wrap_content"
             android:text="@string/lbl_PayPalAcc"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textSize="10sp" />
+            android:textSize="15dp" />
 
         <EditText
             android:id="@+id/editPayPalAcc"
@@ -122,6 +126,12 @@
             android:ems="10"
             android:inputType="textEmailAddress"
             android:textSize="10sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
     </LinearLayout>
 
     <Button

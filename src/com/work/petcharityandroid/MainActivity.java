@@ -62,14 +62,25 @@ public class MainActivity extends Activity {
         public boolean onCreateOptionsMenu(Menu menu) {
                 // Inflate the menu; this adds items to the action bar if it is present.
                 //getMenuInflater().inflate(R.menu.main, menu);
-                menu.add("Clear outdated");
+                menu.add(0,1,0,"Clear outdated");
+                menu.add(0,2,0,"Payments");
                 return true;
         }
         
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
-          Intent MyIntent = new Intent(MainActivity.this, ListOutdatedActivity.class);
-          startActivity(MyIntent);
+        	Intent MyIntent;
+        	switch (item.getItemId()) {
+        	case 1 :
+        		MyIntent = new Intent(MainActivity.this, ListOutdatedActivity.class);
+                startActivity(MyIntent);
+                break;
+        	case 2: 
+        		MyIntent = new Intent(MainActivity.this, PaymentsList.class);
+                startActivity(MyIntent);
+                break;
+        	}
+          
           return super.onOptionsItemSelected(item);
         }
         

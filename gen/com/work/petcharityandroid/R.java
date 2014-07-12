@@ -94,8 +94,9 @@ public final class R {
         public static final int activity_list_pet=0x7f030004;
         public static final int activity_list_pet_activity_pager=0x7f030005;
         public static final int activity_main=0x7f030006;
-        public static final int activity_pet_info=0x7f030007;
-        public static final int pet_info_pager=0x7f030008;
+        public static final int activity_payments_list=0x7f030007;
+        public static final int activity_pet_info=0x7f030008;
+        public static final int pet_info_pager=0x7f030009;
     }
     public static final class menu {
         public static final int add_kalbiya=0x7f080000;
@@ -106,7 +107,8 @@ public final class R {
         public static final int list_pet=0x7f080005;
         public static final int list_pet_activity_pager=0x7f080006;
         public static final int main=0x7f080007;
-        public static final int pet_info=0x7f080008;
+        public static final int payments_list=0x7f080008;
+        public static final int pet_info=0x7f080009;
     }
     public static final class string {
         public static final int action_settings=0x7f060001;
@@ -138,6 +140,7 @@ public final class R {
         public static final int title_activity_list_outdated=0x7f06001d;
         public static final int title_activity_list_pet=0x7f060003;
         public static final int title_activity_list_pet_activity_pager=0x7f060011;
+        public static final int title_activity_payments_list=0x7f06001e;
         public static final int title_activity_pet_info=0x7f060010;
     }
     public static final class style {

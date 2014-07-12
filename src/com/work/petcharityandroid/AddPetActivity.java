@@ -303,7 +303,7 @@ public class AddPetActivity extends Activity implements Constants {
 				try {
 					captureBmp = Media.getBitmap(getContentResolver(),
 							Uri.fromFile(fileFromCamera));
-					smallBmp = ShrinkBitmap(fileFromCamera.toString(), 300, 300);
+					smallBmp = ShrinkBitmap(fileFromCamera.toString(), 200, 200);
 					pictFrame.setImageBitmap(captureBmp);
 
 				} catch (FileNotFoundException e) {
@@ -330,8 +330,8 @@ public class AddPetActivity extends Activity implements Constants {
 					try {
 						captureBmp = Media.getBitmap(getContentResolver(),
 								Uri.fromFile(fileFromGalery));
-						smallBmp = ShrinkBitmap(picturePath.toString(), 300,
-								300);
+						smallBmp = ShrinkBitmap(picturePath.toString(), 200,
+								200);
 						pictFrame.setImageBitmap(captureBmp);
 
 					} catch (FileNotFoundException e) {

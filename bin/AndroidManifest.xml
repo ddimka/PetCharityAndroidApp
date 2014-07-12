@@ -20,7 +20,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name="com.work.petcharityandroid.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -30,47 +30,51 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddPetActivity"
+            android:name="com.work.petcharityandroid.AddPetActivity"
             android:label="@string/title_activity_add_pet"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".ListPetActivity"
+            android:name="com.work.petcharityandroid.ListPetActivity"
             android:label="@string/title_activity_list_pet"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".PetInfo"
+            android:name="com.work.petcharityandroid.PetInfo"
             android:label="@string/title_activity_pet_info"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".ListPetActivityPager"
+            android:name="com.work.petcharityandroid.ListPetActivityPager"
             android:label="@string/title_activity_list_pet_activity_pager"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".AddKalbiyaActivity"
+            android:name="com.work.petcharityandroid.AddKalbiyaActivity"
             android:label="@string/title_activity_add_kalbiya"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".ListKalbiya"
+            android:name="com.work.petcharityandroid.ListKalbiya"
             android:label="@string/title_activity_list_kalbiya"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".ListKalbiyaActivity"
+            android:name="com.work.petcharityandroid.ListKalbiyaActivity"
             android:label="@string/title_activity_list_kalbiya"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".AddPetActivity2"
+            android:name="com.work.petcharityandroid.AddPetActivity2"
             android:label="@string/title_activity_add_pet_activity2" >
         </activity>
         <activity
-            android:name=".ListOutdatedActivity"
+            android:name="com.work.petcharityandroid.ListOutdatedActivity"
             android:label="@string/title_activity_list_outdated" >
+        </activity>
+        <activity
+            android:name="com.work.petcharityandroid.PaymentsList"
+            android:label="@string/title_activity_payments_list" >
         </activity>
     </application>
 
